@@ -142,7 +142,6 @@
             z-index: 1;
         }
         
-        /* Эффект солнечных панелей на сетке */
         .solar-panel-grid {
             position: absolute;
             top: 0;
@@ -174,19 +173,26 @@
             background-size: 30px 30px, 30px 30px, 30px 30px;
         }
         
+        /* ОБНОВЛЕННАЯ ПАНЕЛЬ УПРАВЛЕНИЯ ВНИЗУ */
         .controls-bottom {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             width: 100%;
             margin-top: 10px;
+            padding: 15px;
+            background: rgba(20, 30, 80, 0.3);
+            border-radius: 12px;
+            border: 1px solid #3344aa;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
         }
         
         .control-row {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            align-items: center;
+            gap: 25px;
             width: 100%;
         }
         
@@ -197,7 +203,7 @@
             background: linear-gradient(145deg, #2a3f99, #1a2a77);
             border: 2px solid #4455cc;
             color: #e0e0ff;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
@@ -206,9 +212,10 @@
             box-shadow: 
                 0 6px 0 #112266,
                 inset 0 2px 0 rgba(255, 255, 255, 0.2),
-                0 0 10px rgba(68, 85, 204, 0.5);
+                0 0 15px rgba(68, 85, 204, 0.6);
             transition: all 0.1s;
             touch-action: manipulation;
+            position: relative;
         }
         
         .control-btn:active {
@@ -225,7 +232,7 @@
             box-shadow: 
                 0 6px 0 #662211,
                 inset 0 2px 0 rgba(255, 255, 255, 0.2),
-                0 0 10px rgba(204, 85, 68, 0.5);
+                0 0 15px rgba(204, 85, 68, 0.6);
         }
         
         .control-btn.down:active {
@@ -241,7 +248,7 @@
             box-shadow: 
                 0 6px 0 #116622,
                 inset 0 2px 0 rgba(255, 255, 255, 0.2),
-                0 0 10px rgba(68, 204, 85, 0.5);
+                0 0 15px rgba(68, 204, 85, 0.6);
         }
         
         .control-btn.rotate:active {
@@ -249,6 +256,33 @@
                 0 2px 0 #116622,
                 inset 0 2px 0 rgba(255, 255, 255, 0.1),
                 0 0 10px rgba(68, 204, 85, 0.5);
+        }
+        
+        /* Подписи для кнопок */
+        .control-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 14px;
+            color: #aaccff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        
+        .rotate .control-label {
+            content: "Поворот";
+        }
+        
+        .left .control-label {
+            content: "Влево";
+        }
+        
+        .right .control-label {
+            content: "Вправо";
+        }
+        
+        .down .control-label {
+            content: "Вниз";
         }
         
         .game-over {
@@ -299,14 +333,44 @@
             }
             
             .control-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 20px;
+                width: 65px;
+                height: 65px;
+                font-size: 24px;
+            }
+            
+            .control-label {
+                font-size: 12px;
+                bottom: -22px;
+            }
+            
+            .control-row {
+                gap: 20px;
+            }
+            
+            .stats {
+                gap: 10px;
             }
             
             .stat-item {
                 padding: 6px 12px;
                 font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .control-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 22px;
+            }
+            
+            .control-row {
+                gap: 15px;
+            }
+            
+            .controls-bottom {
+                padding: 12px;
+                gap: 12px;
             }
         }
     </style>
@@ -339,14 +403,30 @@
                 </div>
             </div>
             
+            <!-- ПАНЕЛЬ УПРАВЛЕНИЯ ВНИЗУ ЭКРАНА -->
             <div class="controls-bottom">
                 <div class="control-row">
-                    <button class="control-btn rotate" id="rotate-btn">↻</button>
+                    <button class="control-btn rotate" id="rotate-btn">
+                        ↻
+                        <div class="control-label">Поворот</div>
+                    </button>
                 </div>
+                
                 <div class="control-row">
-                    <button class="control-btn" id="left-btn">←</button>
-                    <button class="control-btn down" id="down-btn">↓</button>
-                    <button class="control-btn" id="right-btn">→</button>
+                    <button class="control-btn left" id="left-btn">
+                        ←
+                        <div class="control-label">Влево</div>
+                    </button>
+                    
+                    <button class="control-btn down" id="down-btn">
+                        ↓
+                        <div class="control-label">Вниз</div>
+                    </button>
+                    
+                    <button class="control-btn right" id="right-btn">
+                        →
+                        <div class="control-label">Вправо</div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -389,6 +469,8 @@
         const scoreEl = document.getElementById('score');
         const linesEl = document.getElementById('lines');
         const levelGradient = document.getElementById('level-gradient');
+        
+        // Элементы управления
         const rotateBtn = document.getElementById('rotate-btn');
         const leftBtn = document.getElementById('left-btn');
         const rightBtn = document.getElementById('right-btn');
@@ -409,6 +491,8 @@
         let animationId = null;
         let clearingRows = [];
         let clearAnimationProgress = 0;
+        let fastDropActive = false;
+        let fastDropInterval = null;
         
         // Инициализация игрового поля
         function initBoard() {
@@ -808,7 +892,38 @@
             drawBoard();
         }
         
-        // Быстрое падение
+        // Быстрое падение (ускоренное)
+        function startFastDrop() {
+            if (gameOver || isPaused || clearingRows.length > 0 || fastDropActive) return;
+            
+            fastDropActive = true;
+            fastDropInterval = setInterval(() => {
+                if (gameOver || isPaused || clearingRows.length > 0) {
+                    stopFastDrop();
+                    return;
+                }
+                
+                if (!collide(currentPiece, currentX, currentY + 1)) {
+                    currentY++;
+                    drawBoard();
+                } else {
+                    stopFastDrop();
+                    mergePiece();
+                    checkLines();
+                }
+            }, 50); // Очень быстрое падение
+        }
+        
+        // Остановка быстрого падения
+        function stopFastDrop() {
+            fastDropActive = false;
+            if (fastDropInterval) {
+                clearInterval(fastDropInterval);
+                fastDropInterval = null;
+            }
+        }
+        
+        // Мгновенное падение (хард дроп)
         function hardDrop() {
             if (gameOver || isPaused || clearingRows.length > 0) return;
             
@@ -836,7 +951,7 @@
             lastTime = time;
             
             dropCounter += deltaTime;
-            if (dropCounter > dropInterval) {
+            if (dropCounter > dropInterval && !fastDropActive) {
                 moveDown();
                 dropCounter = 0;
             }
@@ -856,6 +971,7 @@
             dropInterval = 1000;
             clearingRows = [];
             clearAnimationProgress = 0;
+            fastDropActive = false;
             updateStats();
             updateLevelGradient();
             gameOverScreen.style.display = 'none';
@@ -864,6 +980,11 @@
             
             if (animationId) {
                 cancelAnimationFrame(animationId);
+            }
+            
+            if (fastDropInterval) {
+                clearInterval(fastDropInterval);
+                fastDropInterval = null;
             }
             
             lastTime = 0;
@@ -897,7 +1018,7 @@
                     moveRight();
                     break;
                 case 'ArrowDown':
-                    moveDown();
+                    startFastDrop();
                     break;
                 case 'ArrowUp':
                     rotatePiece();
@@ -912,6 +1033,13 @@
             }
         }
         
+        // Отпускание клавиш
+        function handleKeyUp(e) {
+            if (e.key === 'ArrowDown') {
+                stopFastDrop();
+            }
+        }
+        
         // Инициализация игры
         function init() {
             initBoard();
@@ -922,25 +1050,32 @@
             pauseBtn.addEventListener('click', togglePause);
             restartBtn.addEventListener('click', newGame);
             
-            // Обработчики управления
+            // Обработчики кнопок управления
             rotateBtn.addEventListener('click', rotatePiece);
+            
             leftBtn.addEventListener('click', moveLeft);
             rightBtn.addEventListener('click', moveRight);
-            downBtn.addEventListener('click', moveDown);
             
-            // Долгое нажатие для быстрого падения
+            // Быстрое падение при удержании кнопки "Вниз"
+            downBtn.addEventListener('mousedown', startFastDrop);
             downBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                hardDrop();
+                startFastDrop();
             });
             
-            downBtn.addEventListener('mousedown', (e) => {
+            downBtn.addEventListener('mouseup', stopFastDrop);
+            downBtn.addEventListener('touchend', (e) => {
                 e.preventDefault();
-                hardDrop();
+                stopFastDrop();
             });
+            downBtn.addEventListener('mouseleave', stopFastDrop);
+            
+            // Мгновенное падение при двойном клике
+            downBtn.addEventListener('dblclick', hardDrop);
             
             // Обработка клавиатуры
             document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
             
             // Запускаем игровой цикл
             animationId = requestAnimationFrame(gameLoop);

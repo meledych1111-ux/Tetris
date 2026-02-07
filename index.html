@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Solar Tetris</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Тетрис для iPhone</title>
     <style>
+        /* ОСНОВНЫЕ СТИЛИ */
         * {
             margin: 0;
             padding: 0;
@@ -12,193 +13,252 @@
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
+            touch-action: manipulation;
         }
-
-        body {
-            background: #1a1a2e;
-            color: white;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            overflow: hidden;
-        }
-
-        .game-container {
+        
+        html, body {
             width: 100%;
-            max-width: 500px;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: white;
+        }
+        
+        body {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
-
+        
+        /* ШАПКА */
         .header {
+            padding: 15px;
             text-align: center;
-            padding: 10px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-
+        
         h1 {
-            color: #ffd700;
+            font-size: 24px;
+            color: #FFD700;
             margin-bottom: 5px;
         }
-
+        
         .stats {
             display: flex;
             justify-content: space-around;
             margin-top: 10px;
         }
-
-        .stat {
+        
+        .stat-box {
             text-align: center;
         }
-
+        
         .stat-value {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
-            color: #40e0d0;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #87ceeb;
-        }
-
-        .game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        canvas {
-            background: #000;
-            border: 3px solid #333;
-            border-radius: 5px;
+            color: white;
             display: block;
         }
-
-        .controls {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
         }
-
-        .control-row {
+        
+        /* ИГРОВОЕ ПОЛЕ */
+        .game-container {
+            flex: 1;
             display: flex;
             justify-content: center;
-            gap: 10px;
+            align-items: center;
+            padding: 10px;
         }
-
-        .btn {
+        
+        canvas {
+            background: #111;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            max-width: 100%;
+            max-height: 70vh;
+        }
+        
+        /* КНОПКИ СТАРТ/ПАУЗА - ВИДИМЫЕ ВНИЗУ */
+        .action-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+        
+        .action-btn {
+            flex: 1;
+            height: 60px;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+        
+        #startBtn {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+        }
+        
+        #pauseBtn {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+        }
+        
+        /* УПРАВЛЕНИЕ */
+        .controls {
+            margin-top: 20px;
+            padding: 0 10px 80px 10px; /* Отступ для кнопок старт/пауза */
+        }
+        
+        .dpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .control-btn {
+            height: 60px;
             background: rgba(255, 255, 255, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
             color: white;
-            font-size: 20px;
-            padding: 15px;
-            border-radius: 10px;
+            font-size: 28px;
             cursor: pointer;
-            min-width: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.1s;
         }
-
-        .btn:active {
+        
+        .control-btn:active {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(0.95);
         }
-
-        .action-btn {
-            background: linear-gradient(to right, #27ae60, #2ecc71);
-            border: none;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        
+        #rotate {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.4);
         }
-
-        .action-btn:active {
-            transform: scale(0.98);
+        
+        #drop {
+            background: rgba(255, 99, 71, 0.2);
+            border-color: rgba(255, 99, 71, 0.4);
         }
-
-        #pauseBtn {
-            background: linear-gradient(to right, #e67e22, #f39c12);
+        
+        /* ДЛЯ iPhone */
+        @supports (-webkit-touch-callout: none) {
+            .action-buttons {
+                bottom: max(20px, env(safe-area-inset-bottom));
+            }
         }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            background: rgba(46, 204, 113, 0.9);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            display: none;
-            z-index: 1000;
+        
+        /* ГОРИЗОНТАЛЬНАЯ ОРИЕНТАЦИЯ */
+        @media (orientation: landscape) {
+            body {
+                flex-direction: row;
+            }
+            
+            .header {
+                width: 200px;
+                height: 100%;
+                border-right: 1px solid rgba(255, 255, 255, 0.2);
+                border-bottom: none;
+            }
+            
+            .game-container {
+                flex: 1;
+            }
+            
+            .action-buttons {
+                bottom: 10px;
+                left: 210px;
+                right: 10px;
+            }
+            
+            canvas {
+                max-height: 85vh;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="header">
-            <h1>🎮 ТЕТРИС</h1>
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-value" id="score">0</div>
-                    <div class="stat-label">ОЧКИ</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="level">1</div>
-                    <div class="stat-label">УРОВЕНЬ</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="lines">0</div>
-                    <div class="stat-label">ЛИНИИ</div>
-                </div>
+    <!-- ШАПКА -->
+    <div class="header">
+        <h1>🎮 ТЕТРИС</h1>
+        <div class="stats">
+            <div class="stat-box">
+                <span class="stat-value" id="score">0</span>
+                <span class="stat-label">ОЧКИ</span>
             </div>
-        </div>
-
-        <div class="game-area">
-            <canvas id="tetris" width="300" height="600"></canvas>
-            
-            <div class="controls">
-                <div class="control-row">
-                    <button class="btn" id="left">←</button>
-                    <button class="btn" id="rotate">↻</button>
-                    <button class="btn" id="right">→</button>
-                </div>
-                <div class="control-row">
-                    <button class="btn" id="down">↓</button>
-                    <button class="btn" id="drop">💥</button>
-                </div>
-                <div class="control-row">
-                    <button class="action-btn" id="startBtn">
-                        <span>▶️</span>
-                        <span>СТАРТ</span>
-                    </button>
-                    <button class="action-btn" id="pauseBtn">
-                        <span>⏸️</span>
-                        <span>ПАУЗА</span>
-                    </button>
-                </div>
+            <div class="stat-box">
+                <span class="stat-value" id="level">1</span>
+                <span class="stat-label">УРОВЕНЬ</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value" id="lines">0</span>
+                <span class="stat-label">ЛИНИИ</span>
             </div>
         </div>
     </div>
 
-    <div id="notification" class="notification"></div>
+    <!-- ИГРОВОЕ ПОЛЕ -->
+    <div class="game-container">
+        <canvas id="tetris" width="300" height="600"></canvas>
+    </div>
+
+    <!-- КНОПКИ СТАРТ/ПАУЗА - ВИДИМЫЕ ВНИЗУ ЭКРАНА -->
+    <div class="action-buttons">
+        <button class="action-btn" id="startBtn">
+            <span>▶️</span>
+            <span>СТАРТ</span>
+        </button>
+        <button class="action-btn" id="pauseBtn">
+            <span>⏸️</span>
+            <span>ПАУЗА</span>
+        </button>
+    </div>
+
+    <!-- УПРАВЛЕНИЕ -->
+    <div class="controls">
+        <div class="dpad">
+            <div></div>
+            <button class="control-btn" id="rotate">↻</button>
+            <div></div>
+            <button class="control-btn" id="left">←</button>
+            <button class="control-btn" id="down">↓</button>
+            <button class="control-btn" id="right">→</button>
+            <div></div>
+            <button class="control-btn" id="drop">💥</button>
+            <div></div>
+        </div>
+    </div>
 
     <script>
         // ============ ИНИЦИАЛИЗАЦИЯ ============
@@ -215,63 +275,35 @@
         
         // Цвета фигур
         const COLORS = [
-            '#000000', // Пусто
-            '#FF0000', // I
-            '#00FF00', // J
-            '#0000FF', // L
-            '#FFFF00', // O
-            '#FF00FF', // S
-            '#00FFFF', // T
-            '#FF8800'  // Z
+            '#000000',
+            '#FF6B6B', // красный
+            '#4ECDC4', // бирюзовый
+            '#FFD166', // желтый
+            '#06D6A0', // зеленый
+            '#118AB2', // синий
+            '#EF476F', // розовый
+            '#073B4C'  // темно-синий
         ];
         
         // Фигуры Тетриса
         const SHAPES = [
             null,
-            [ // I
-                [0,0,0,0],
-                [1,1,1,1],
-                [0,0,0,0],
-                [0,0,0,0]
-            ],
-            [ // J
-                [2,0,0],
-                [2,2,2],
-                [0,0,0]
-            ],
-            [ // L
-                [0,0,3],
-                [3,3,3],
-                [0,0,0]
-            ],
-            [ // O
-                [4,4],
-                [4,4]
-            ],
-            [ // S
-                [0,5,5],
-                [5,5,0],
-                [0,0,0]
-            ],
-            [ // T
-                [0,6,0],
-                [6,6,6],
-                [0,0,0]
-            ],
-            [ // Z
-                [7,7,0],
-                [0,7,7],
-                [0,0,0]
-            ]
+            [[1,1,1,1]], // I
+            [[2,0,0],[2,2,2]], // J
+            [[0,0,3],[3,3,3]], // L
+            [[4,4],[4,4]], // O
+            [[0,5,5],[5,5,0]], // S
+            [[0,6,0],[6,6,6]], // T
+            [[7,7,0],[0,7,7]]  // Z
         ];
         
         // Игровые переменные
-        let board = createBoard();
+        let board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
         let score = 0;
         let level = 1;
         let lines = 0;
         let gameOver = false;
-        let paused = false;
+        let paused = true;
         let dropCounter = 0;
         let dropInterval = 1000;
         let lastTime = 0;
@@ -282,31 +314,17 @@
         };
         
         // ============ ФУНКЦИИ ============
-        function createBoard() {
-            return Array.from({length: ROWS}, () => Array(COLS).fill(0));
-        }
-        
         function createPiece() {
-            const pieces = 'IJLOSTZ';
-            const rand = pieces[Math.floor(Math.random() * pieces.length)];
-            let matrix;
+            const pieces = [1,2,3,4,5,6,7];
+            const type = pieces[Math.floor(Math.random() * pieces.length)];
             
-            switch(rand) {
-                case 'I': matrix = SHAPES[1]; break;
-                case 'J': matrix = SHAPES[2]; break;
-                case 'L': matrix = SHAPES[3]; break;
-                case 'O': matrix = SHAPES[4]; break;
-                case 'S': matrix = SHAPES[5]; break;
-                case 'T': matrix = SHAPES[6]; break;
-                case 'Z': matrix = SHAPES[7]; break;
-            }
-            
-            player.matrix = matrix;
+            player.matrix = SHAPES[type].map(row => [...row]);
             player.pos.y = 0;
-            player.pos.x = Math.floor(COLS / 2) - Math.floor(matrix[0].length / 2);
+            player.pos.x = Math.floor(COLS / 2) - Math.floor(player.matrix[0].length / 2);
             
             if (collide()) {
                 gameOver = true;
+                showGameOver();
             }
         }
         
@@ -315,9 +333,17 @@
             
             for (let y = 0; y < m.length; y++) {
                 for (let x = 0; x < m[y].length; x++) {
-                    if (m[y][x] !== 0 &&
-                        (board[y + o.y] && board[y + o.y][x + o.x]) !== 0) {
-                        return true;
+                    if (m[y][x] !== 0) {
+                        const boardY = y + o.y;
+                        const boardX = x + o.x;
+                        
+                        if (boardX < 0 || boardX >= COLS || boardY >= ROWS) {
+                            return true;
+                        }
+                        
+                        if (boardY >= 0 && board[boardY][boardX] !== 0) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -339,6 +365,8 @@
         }
         
         function playerDrop() {
+            if (paused || gameOver) return;
+            
             player.pos.y++;
             if (collide()) {
                 player.pos.y--;
@@ -350,42 +378,41 @@
         }
         
         function playerMove(dir) {
+            if (paused || gameOver) return;
+            
             player.pos.x += dir;
             if (collide()) {
                 player.pos.x -= dir;
             }
+            draw();
         }
         
         function playerRotate() {
-            const pos = player.pos.x;
-            let offset = 1;
-            rotate(player.matrix);
+            if (paused || gameOver) return;
             
-            while (collide()) {
-                player.pos.x += offset;
-                offset = -(offset + (offset > 0 ? 1 : -1));
-                if (offset > player.matrix[0].length) {
-                    rotate(player.matrix);
-                    rotate(player.matrix);
-                    rotate(player.matrix);
-                    player.pos.x = pos;
-                    return;
+            const pos = player.pos.x;
+            const original = player.matrix.map(row => [...row]);
+            
+            // Поворачиваем матрицу
+            const rotated = [];
+            for (let i = 0; i < original[0].length; i++) {
+                rotated[i] = [];
+                for (let j = 0; j < original.length; j++) {
+                    rotated[i][j] = original[original.length - 1 - j][i];
                 }
             }
-        }
-        
-        function rotate(matrix) {
-            const N = matrix.length;
-            for (let y = 0; y < N; y++) {
-                for (let x = 0; x < y; x++) {
-                    [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
-                }
+            
+            player.matrix = rotated;
+            
+            if (collide()) {
+                player.matrix = original;
             }
-            matrix.forEach(row => row.reverse());
+            
+            draw();
         }
         
         function sweep() {
-            let rowCount = 0;
+            let linesCleared = 0;
             
             outer: for (let y = ROWS - 1; y >= 0; y--) {
                 for (let x = 0; x < COLS; x++) {
@@ -394,88 +421,113 @@
                     }
                 }
                 
-                const row = board.splice(y, 1)[0].fill(0);
+                // Удаляем заполненную строку
+                const row = board.splice(y, 1)[0];
+                row.fill(0);
                 board.unshift(row);
-                rowCount++;
+                linesCleared++;
                 y++;
             }
             
-            if (rowCount > 0) {
-                score += rowCount * 100 * level;
-                lines += rowCount;
-                level = Math.floor(lines / 10) + 1;
-                dropInterval = 1000 - (level - 1) * 100;
+            if (linesCleared > 0) {
+                // Начисляем очки
+                score += linesCleared * 100 * level;
+                lines += linesCleared;
                 
-                document.getElementById('score').textContent = score;
-                document.getElementById('lines').textContent = lines;
-                document.getElementById('level').textContent = level;
+                // Повышаем уровень
+                const newLevel = Math.floor(lines / 10) + 1;
+                if (newLevel > level) {
+                    level = newLevel;
+                    dropInterval = Math.max(100, 1000 - (level - 1) * 100);
+                }
                 
-                showNotification(`+${rowCount} линия!`);
+                updateStats();
             }
         }
         
         function draw() {
             // Очищаем канвас
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Рисуем поле
-            drawMatrix(board, {x: 0, y: 0});
+            // Рисуем установленные блоки
+            board.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value !== 0) {
+                        ctx.fillStyle = COLORS[value];
+                        ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                        
+                        // Границы
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    }
+                });
+            });
             
             // Рисуем текущую фигуру
             if (player.matrix) {
-                drawMatrix(player.matrix, player.pos);
+                player.matrix.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value !== 0) {
+                            ctx.fillStyle = COLORS[value];
+                            ctx.fillRect(
+                                (x + player.pos.x) * BLOCK_SIZE,
+                                (y + player.pos.y) * BLOCK_SIZE,
+                                BLOCK_SIZE,
+                                BLOCK_SIZE
+                            );
+                            
+                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(
+                                (x + player.pos.x) * BLOCK_SIZE,
+                                (y + player.pos.y) * BLOCK_SIZE,
+                                BLOCK_SIZE,
+                                BLOCK_SIZE
+                            );
+                        }
+                    });
+                });
             }
             
             // Если игра окончена
             if (gameOver) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                ctx.fillStyle = 'red';
-                ctx.font = '24px Arial';
+                ctx.fillStyle = '#FF6B6B';
+                ctx.font = 'bold 24px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('ИГРА ОКОНЧЕНА', canvas.width / 2, canvas.height / 2);
-                ctx.font = '16px Arial';
-                ctx.fillText('Нажмите СТАРТ', canvas.width / 2, canvas.height / 2 + 30);
+                ctx.fillText('ИГРА ОКОНЧЕНА', canvas.width / 2, canvas.height / 2 - 20);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = '18px Arial';
+                ctx.fillText('Нажмите СТАРТ', canvas.width / 2, canvas.height / 2 + 20);
+            }
+            
+            // Если пауза
+            if (paused && !gameOver) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#FFD700';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('ПАУЗА', canvas.width / 2, canvas.height / 2);
             }
         }
         
-        function drawMatrix(matrix, offset) {
-            matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        ctx.fillStyle = COLORS[value];
-                        ctx.fillRect(
-                            (x + offset.x) * BLOCK_SIZE,
-                            (y + offset.y) * BLOCK_SIZE,
-                            BLOCK_SIZE - 1,
-                            BLOCK_SIZE - 1
-                        );
-                        
-                        // Границы блоков
-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(
-                            (x + offset.x) * BLOCK_SIZE,
-                            (y + offset.y) * BLOCK_SIZE,
-                            BLOCK_SIZE - 1,
-                            BLOCK_SIZE - 1
-                        );
-                    }
-                });
-            });
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+            document.getElementById('lines').textContent = lines;
         }
         
-        function showNotification(msg) {
-            const note = document.getElementById('notification');
-            note.textContent = msg;
-            note.style.display = 'block';
-            setTimeout(() => {
-                note.style.display = 'none';
-            }, 1500);
+        function showGameOver() {
+            draw();
         }
         
+        // Игровой цикл
         function update(time = 0) {
             const deltaTime = time - lastTime;
             lastTime = time;
@@ -492,54 +544,47 @@
         }
         
         // ============ УПРАВЛЕНИЕ ============
-        // Кнопки
-        document.getElementById('left').addEventListener('click', () => {
-            if (!paused && !gameOver) playerMove(-1);
-        });
-        
-        document.getElementById('right').addEventListener('click', () => {
-            if (!paused && !gameOver) playerMove(1);
-        });
-        
-        document.getElementById('down').addEventListener('click', () => {
-            if (!paused && !gameOver) playerDrop();
-        });
-        
-        document.getElementById('rotate').addEventListener('click', () => {
-            if (!paused && !gameOver) playerRotate();
-        });
-        
+        // Кнопки управления
+        document.getElementById('left').addEventListener('click', () => playerMove(-1));
+        document.getElementById('right').addEventListener('click', () => playerMove(1));
+        document.getElementById('down').addEventListener('click', playerDrop);
+        document.getElementById('rotate').addEventListener('click', playerRotate);
         document.getElementById('drop').addEventListener('click', () => {
-            if (!paused && !gameOver) {
-                while (!collide()) {
-                    player.pos.y++;
-                }
-                player.pos.y--;
-                merge();
-                createPiece();
-                sweep();
+            if (paused || gameOver) return;
+            
+            while (!collide()) {
+                player.pos.y++;
             }
+            player.pos.y--;
+            merge();
+            createPiece();
+            sweep();
+            draw();
         });
         
         // Старт игры
         document.getElementById('startBtn').addEventListener('click', () => {
             if (gameOver) {
-                board = createBoard();
+                // Сброс игры
+                board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
                 score = 0;
                 level = 1;
                 lines = 0;
                 gameOver = false;
+                updateStats();
+            }
+            
+            if (paused) {
                 paused = false;
-                
-                document.getElementById('score').textContent = '0';
-                document.getElementById('level').textContent = '1';
-                document.getElementById('lines').textContent = '0';
+                document.getElementById('startBtn').innerHTML = '<span>▶️</span><span>СТАРТ</span>';
                 document.getElementById('pauseBtn').innerHTML = '<span>⏸️</span><span>ПАУЗА</span>';
             }
             
-            createPiece();
+            if (!player.matrix) {
+                createPiece();
+            }
+            
             update();
-            showNotification('Игра началась!');
         });
         
         // Пауза
@@ -550,35 +595,38 @@
             document.getElementById('pauseBtn').innerHTML = paused 
                 ? '<span>▶️</span><span>ПРОДОЛЖИТЬ</span>'
                 : '<span>⏸️</span><span>ПАУЗА</span>';
+            
+            draw();
         });
         
-        // Клавиатура
-        document.addEventListener('keydown', event => {
-            if (paused || gameOver) return;
+        // Клавиатурное управление
+        document.addEventListener('keydown', (e) => {
+            if (gameOver && e.key !== ' ') return;
             
-            switch(event.key) {
+            switch(e.key) {
                 case 'ArrowLeft':
                 case 'a':
-                    event.preventDefault();
+                    e.preventDefault();
                     playerMove(-1);
                     break;
                 case 'ArrowRight':
                 case 'd':
-                    event.preventDefault();
+                    e.preventDefault();
                     playerMove(1);
                     break;
                 case 'ArrowDown':
                 case 's':
-                    event.preventDefault();
+                    e.preventDefault();
                     playerDrop();
                     break;
                 case 'ArrowUp':
                 case 'w':
-                    event.preventDefault();
+                    e.preventDefault();
                     playerRotate();
                     break;
                 case ' ':
-                    event.preventDefault();
+                    e.preventDefault();
+                    if (paused || gameOver) return;
                     while (!collide()) {
                         player.pos.y++;
                     }
@@ -586,9 +634,11 @@
                     merge();
                     createPiece();
                     sweep();
+                    draw();
                     break;
                 case 'p':
-                    event.preventDefault();
+                    e.preventDefault();
+                    if (gameOver) return;
                     paused = !paused;
                     document.getElementById('pauseBtn').innerHTML = paused 
                         ? '<span>▶️</span><span>ПРОДОЛЖИТЬ</span>'
@@ -597,14 +647,57 @@
             }
         });
         
+        // Свайп-управление для мобильных
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: false });
+        
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (!e.changedTouches[0]) return;
+            
+            const touch = e.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            
+            // Минимальное расстояние для свайпа
+            if (Math.abs(deltaX) < 30 && Math.abs(deltaY) < 30) return;
+            
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Горизонтальный свайп
+                if (deltaX > 0) {
+                    playerMove(1);
+                } else {
+                    playerMove(-1);
+                }
+            } else {
+                // Вертикальный свайп
+                if (deltaY > 0) {
+                    playerDrop();
+                } else {
+                    playerRotate();
+                }
+            }
+        }, { passive: false });
+        
         // ============ ЗАПУСК ============
         // Начальная отрисовка
         draw();
         
-        // Показываем инструкцию
-        setTimeout(() => {
-            showNotification('Нажмите СТАРТ чтобы начать!');
-        }, 500);
+        // Сразу создаем первую фигуру, но игра на паузе
+        createPiece();
+        update();
+        
+        // Для iPhone - дополнительная настройка
+        if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+            document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
+        }
     </script>
 </body>
 </html>

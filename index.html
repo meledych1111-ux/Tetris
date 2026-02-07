@@ -32,7 +32,7 @@
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
         
-        /* ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ СТАРТ/ПАУЗА */
+        /* ВЕРХНЯЯ ПАНЕЛЬ */
         .top-panel {
             height: 70px;
             background: rgba(16, 20, 31, 0.95);
@@ -44,9 +44,21 @@
             flex-shrink: 0;
         }
         
-        .stats-area {
+        .game-title {
+            font-size: 20px;
+            color: #40e0d0;
+            font-weight: 600;
+        }
+        
+        .stats-controls {
             display: flex;
+            align-items: center;
             gap: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
         }
         
         .stat-box {
@@ -67,46 +79,44 @@
             margin-top: 3px;
         }
         
-        .action-buttons-top {
+        .top-buttons {
             display: flex;
             gap: 10px;
         }
         
-        .top-btn {
+        .icon-btn {
+            width: 45px;
             height: 45px;
-            padding: 0 20px;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 22px;
             color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
             transition: all 0.2s;
         }
         
-        .top-btn:active {
+        .icon-btn:active {
             transform: scale(0.95);
         }
         
-        #startBtn {
-            background: linear-gradient(135deg, #2575fc, #6a11cb);
+        #newGameBtn {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
         }
         
         #pauseBtn {
             background: linear-gradient(135deg, #f46b45, #eea849);
         }
         
-        /* ИГРОВОЕ ПОЛЕ */
+        /* ИГРОВОЕ ПОЛЕ С МАЛЕНЬКИМИ ФИГУРАМИ */
         .game-screen {
             flex: 1;
             padding: 10px;
-            background: #000;
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
         
         .monitor-area {
@@ -116,7 +126,6 @@
             border-radius: 8px;
             position: relative;
             overflow: hidden;
-            margin-bottom: 10px;
             box-shadow: 
                 inset 0 0 40px rgba(0, 0, 0, 0.7),
                 0 5px 20px rgba(0, 0, 0, 0.4);
@@ -128,32 +137,30 @@
             height: 100%;
         }
         
-        /* ДЖОЙСТИК ВНИЗУ - БОЛЬШОЙ И УДОБНЫЙ */
+        /* ДЖОЙСТИК - В САМОМ НИЗУ, НО ВЫШЕ СТАТУС БАРА */
         .joystick-container {
-            height: 140px;
+            height: 130px;
             background: rgba(16, 20, 31, 0.95);
             border-radius: 12px;
-            padding: 15px;
+            padding: 10px;
             border: 2px solid rgba(64, 224, 208, 0.3);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            margin-top: 5px;
         }
         
         .joystick-title {
             text-align: center;
             color: #40e0d0;
-            font-size: 14px;
-            margin-bottom: 5px;
+            font-size: 12px;
+            margin-bottom: 8px;
         }
         
-        /* РАСПОЛОЖЕНИЕ КНОПОК ДЖОЙСТИКА - КРЕСТОВИНА */
+        /* КРЕСТОВИНА УПРАВЛЕНИЯ */
         .joystick-layout {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 8px;
-            height: 100%;
+            height: 100px;
         }
         
         .joystick-btn {
@@ -161,7 +168,7 @@
             border: 2px solid rgba(64, 224, 208, 0.3);
             border-radius: 10px;
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -175,63 +182,66 @@
             box-shadow: 0 0 15px rgba(64, 224, 208, 0.4);
         }
         
-        /* КРЕСТОВИНА УПРАВЛЕНИЯ */
+        /* КРЕСТОВИНА */
         #btnUp {
-            grid-column: 3;
+            grid-column: 2;
             grid-row: 1;
         }
         
         #btnLeft {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        
+        #btnDown {
             grid-column: 2;
             grid-row: 2;
         }
         
         #btnRight {
-            grid-column: 4;
+            grid-column: 3;
             grid-row: 2;
         }
         
-        #btnDown {
-            grid-column: 3;
-            grid-row: 3;
-        }
-        
-        /* ДОПОЛНИТЕЛЬНЫЕ КНОПКИ */
         #btnRotate {
-            grid-column: 5;
+            grid-column: 1;
             grid-row: 1;
             background: rgba(255, 215, 0, 0.15);
             border-color: rgba(255, 215, 0, 0.3);
         }
         
         #btnHardDrop {
-            grid-column: 5;
-            grid-row: 3;
+            grid-column: 3;
+            grid-row: 1;
             background: rgba(255, 99, 71, 0.15);
             border-color: rgba(255, 99, 71, 0.3);
-            font-size: 24px;
+            font-size: 22px;
         }
         
         #btnHold {
             grid-column: 1;
-            grid-row: 1;
+            grid-row: 3;
             background: rgba(138, 43, 226, 0.15);
             border-color: rgba(138, 43, 226, 0.3);
-            font-size: 22px;
+            font-size: 20px;
         }
         
-        /* iPhone оптимизация */
+        /* АДАПТИВНОСТЬ */
         @media (max-height: 700px) {
             .top-panel {
                 height: 60px;
             }
             
             .joystick-container {
-                height: 120px;
+                height: 110px;
             }
             
-            .joystick-btn {
-                font-size: 24px;
+            .joystick-layout {
+                height: 85px;
+            }
+            
+            .stat-value {
+                font-size: 20px;
             }
         }
         
@@ -241,77 +251,80 @@
             }
             
             .top-panel {
-                width: 180px;
+                width: 160px;
                 height: 100%;
                 flex-direction: column;
                 justify-content: flex-start;
-                padding-top: 20px;
+                padding-top: 15px;
                 border-right: 2px solid rgba(64, 224, 208, 0.3);
                 border-bottom: none;
             }
             
-            .stats-area {
-                flex-direction: column;
-                gap: 25px;
-                margin-top: 20px;
+            .game-title {
+                writing-mode: vertical-rl;
+                transform: rotate(180deg);
+                margin-bottom: 20px;
             }
             
-            .action-buttons-top {
+            .stats-controls {
                 flex-direction: column;
-                margin-top: 20px;
+                gap: 15px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .top-buttons {
+                flex-direction: column;
                 width: 100%;
             }
             
-            .top-btn {
+            .icon-btn {
                 width: 100%;
                 height: 50px;
             }
             
             .game-screen {
                 flex-direction: row;
-                padding: 15px;
+                padding: 10px;
             }
             
             .monitor-area {
                 flex: 2;
-                margin-right: 15px;
-                margin-bottom: 0;
+                margin-right: 10px;
             }
             
             .joystick-container {
                 flex: 1;
                 height: auto;
+                margin-top: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ -->
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
     <div class="top-panel">
-        <div class="stats-area">
-            <div class="stat-box">
-                <div class="stat-value" id="score">0</div>
-                <div class="stat-label">ОЧКИ</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value" id="level">1</div>
-                <div class="stat-label">УРОВЕНЬ</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value" id="lines">0</div>
-                <div class="stat-label">ЛИНИИ</div>
-            </div>
-        </div>
+        <div class="game-title">SOLAR TETRIS</div>
         
-        <div class="action-buttons-top">
-            <button class="top-btn" id="startBtn">
-                <span>▶</span>
-                <span>СТАРТ</span>
-            </button>
-            <button class="top-btn" id="pauseBtn">
-                <span>⏸</span>
-                <span>ПАУЗА</span>
-            </button>
+        <div class="stats-controls">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="score">0</div>
+                    <div class="stat-label">ОЧКИ</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="level">1</div>
+                    <div class="stat-label">УРОВЕНЬ</div>
+                </div>
+            </div>
+            
+            <div class="top-buttons">
+                <button class="icon-btn" id="newGameBtn">🔄</button>
+                <button class="icon-btn" id="pauseBtn">⏸</button>
+            </div>
         </div>
     </div>
 
@@ -322,19 +335,16 @@
             <canvas id="gameCanvas"></canvas>
         </div>
 
-        <!-- ДЖОЙСТИК - ВИДИМЫЙ И УДОБНЫЙ -->
+        <!-- ДЖОЙСТИК - ВИДИМЫЙ ВНИЗУ -->
         <div class="joystick-container">
-            <div class="joystick-title">ДЖОЙСТИК УПРАВЛЕНИЯ</div>
+            <div class="joystick-title">УПРАВЛЕНИЕ</div>
             <div class="joystick-layout">
-                <!-- КРЕСТОВИНА -->
+                <button class="joystick-btn" id="btnRotate">↻</button>
                 <button class="joystick-btn" id="btnUp">↑</button>
+                <button class="joystick-btn" id="btnHardDrop">💥</button>
                 <button class="joystick-btn" id="btnLeft">←</button>
                 <button class="joystick-btn" id="btnDown">↓</button>
                 <button class="joystick-btn" id="btnRight">→</button>
-                
-                <!-- ДОПОЛНИТЕЛЬНЫЕ КНОПКИ -->
-                <button class="joystick-btn" id="btnRotate">↻</button>
-                <button class="joystick-btn" id="btnHardDrop">💥</button>
                 <button class="joystick-btn" id="btnHold">💾</button>
             </div>
         </div>
@@ -345,11 +355,10 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
-        // Размеры игрового поля
-        const COLS = 10;
-        const ROWS = 20;
+        // БОЛЬШЕ СТОЛБЦОВ И СТРОК ДЛЯ МАЛЕНЬКИХ ФИГУР
+        const COLS = 14;  // Было 10
+        const ROWS = 24;  // Было 20
         
-        // Рассчитываем размер блока
         function calculateBlockSize() {
             const container = canvas.parentElement;
             return Math.min(
@@ -360,26 +369,25 @@
         
         let BLOCK_SIZE = calculateBlockSize();
         
-        // ПРИГЛУШЕННЫЕ ЦВЕТА ДЛЯ 7 РАЗНЫХ ФИГУР
+        // ПРИГЛУШЕННЫЕ ЦВЕТА ДЛЯ 7 ФИГУР
         const COLORS = {
-            1: '#6a89cc', // I - приглушенный лавандовый
-            2: '#78e08f', // J - приглушенный мятный
-            3: '#e55039', // L - приглушенный терракотовый
-            4: '#f6b93b', // O - приглушенный горчичный
-            5: '#4a69bd', // S - приглушенный индиго
-            6: '#60a3bc', // T - приглушенный бирюзовый
-            7: '#b8e994'  // Z - приглушенный салатовый
+            1: '#8a9dc2', // I - серо-голубой
+            2: '#9acd9a', // J - салатовый
+            3: '#d4a5a5', // L - розовый
+            4: '#e6cfa1', // O - бежевый
+            5: '#b0a8d3', // S - лавандовый
+            6: '#a3d1d1', // T - аквамарин
+            7: '#c9b8a8'  // Z - серо-коричневый
         };
         
-        // Темные оттенки для 3D эффекта
         const DARK_COLORS = {
-            1: '#4a69bd',
-            2: '#38ada9',
-            3: '#b33939',
-            4: '#e58e26',
-            5: '#1e3799',
-            6: '#3c6382',
-            7: '#78e08f'
+            1: '#6a7ba2',
+            2: '#7aad7a',
+            3: '#b48a8a',
+            4: '#c7b080',
+            5: '#8e80b3',
+            6: '#7ab0b0',
+            7: '#a89980'
         };
         
         // ФИГУРЫ ТЕТРИСА
@@ -399,11 +407,8 @@
         let currentPiece = null;
         let heldPiece = null;
         let canHold = true;
-        let pieceX = 0;
-        let pieceY = 0;
-        let score = 0;
-        let level = 1;
-        let lines = 0;
+        let pieceX = 0, pieceY = 0;
+        let score = 0, level = 1, lines = 0;
         let gameSpeed = 1000;
         let gameInterval = null;
         let isPaused = true;
@@ -467,12 +472,8 @@
                         const newX = pieceX + x;
                         const newY = pieceY + y;
                         
-                        if (
-                            newX < 0 || 
-                            newX >= COLS || 
-                            newY >= ROWS || 
-                            (newY >= 0 && board[newY][newX] !== 0)
-                        ) {
+                        if (newX < 0 || newX >= COLS || newY >= ROWS || 
+                            (newY >= 0 && board[newY][newX] !== 0)) {
                             return true;
                         }
                     }
@@ -506,13 +507,10 @@
             }
             
             if (linesCleared.length > 0) {
-                // Запускаем анимацию очистки
                 clearingLines = linesCleared;
                 clearAnimation = 1;
                 
-                // Начисляем очки с задержкой
                 setTimeout(() => {
-                    // Удаляем заполненные строки
                     for (let y of linesCleared.sort((a,b) => b-a)) {
                         board.splice(y, 1);
                         board.unshift(Array(COLS).fill(0));
@@ -522,10 +520,10 @@
                     score += linePoints[Math.min(linesCleared.length - 1, 3)] * level;
                     lines += linesCleared.length;
                     
-                    const newLevel = Math.floor(lines / 10) + 1;
+                    const newLevel = Math.floor(lines / 15) + 1; // Медленнее повышение уровня
                     if (newLevel > level) {
                         level = newLevel;
-                        gameSpeed = Math.max(200, 1000 - (level - 1) * 100);
+                        gameSpeed = Math.max(300, 1000 - (level - 1) * 80); // Медленнее ускоряется
                         
                         if (gameInterval) {
                             clearInterval(gameInterval);
@@ -557,7 +555,7 @@
             draw();
         }
         
-        // ============ УПРАВЛЕНИЕ ФИГУРАМИ ============
+        // ============ УПРАВЛЕНИЕ ============
         function move(dx) {
             if (isPaused || isGameOver || !currentPiece || clearingLines.length > 0) return;
             
@@ -572,8 +570,8 @@
             if (isPaused || isGameOver || !currentPiece || clearingLines.length > 0) return;
             
             const originalMatrix = currentPiece.matrix.map(row => [...row]);
-            
             const rotated = [];
+            
             for (let i = 0; i < originalMatrix[0].length; i++) {
                 rotated[i] = [];
                 for (let j = 0; j < originalMatrix.length; j++) {
@@ -630,17 +628,17 @@
             draw();
         }
         
-        // ============ ОТРИСОВКА С АНИМАЦИЕЙ ============
+        // ============ ОТРИСОВКА ============
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Тёмный фон
+            // Фон
             ctx.fillStyle = '#0d1117';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Сетка
-            ctx.strokeStyle = 'rgba(64, 224, 208, 0.1)';
-            ctx.lineWidth = 1;
+            // Сетка (более тонкая для маленьких блоков)
+            ctx.strokeStyle = 'rgba(64, 224, 208, 0.06)';
+            ctx.lineWidth = 0.5;
             
             for (let x = 0; x <= COLS; x++) {
                 ctx.beginPath();
@@ -656,24 +654,23 @@
                 ctx.stroke();
             }
             
-            // Установленные блоки с анимацией очистки
+            // Блоки
             for (let y = 0; y < ROWS; y++) {
                 const isClearing = clearingLines.includes(y);
                 for (let x = 0; x < COLS; x++) {
                     if (board[y][x] !== 0) {
                         if (isClearing) {
-                            // Анимация исчезновения
                             ctx.globalAlpha = 1 - clearAnimation;
-                            draw3DBlock(x, y, board[y][x]);
+                            drawBlock(x, y, board[y][x]);
                             ctx.globalAlpha = 1;
                         } else {
-                            draw3DBlock(x, y, board[y][x]);
+                            drawBlock(x, y, board[y][x]);
                         }
                     }
                 }
             }
             
-            // Тень падающей фигуры
+            // Тень
             if (currentPiece && !isGameOver && clearingLines.length === 0) {
                 let shadowY = pieceY;
                 while (!checkCollisionAt(pieceX, shadowY + 1)) {
@@ -685,7 +682,7 @@
                     for (let y = 0; y < currentPiece.matrix.length; y++) {
                         for (let x = 0; x < currentPiece.matrix[y].length; x++) {
                             if (currentPiece.matrix[y][x] !== 0) {
-                                draw3DBlock(pieceX + x, shadowY + y, currentPiece.type);
+                                drawBlock(pieceX + x, shadowY + y, currentPiece.type);
                             }
                         }
                     }
@@ -698,7 +695,7 @@
                 for (let y = 0; y < currentPiece.matrix.length; y++) {
                     for (let x = 0; x < currentPiece.matrix[y].length; x++) {
                         if (currentPiece.matrix[y][x] !== 0) {
-                            draw3DBlock(pieceX + x, pieceY + y, currentPiece.type);
+                            drawBlock(pieceX + x, pieceY + y, currentPiece.type);
                         }
                     }
                 }
@@ -710,17 +707,13 @@
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
                 ctx.fillStyle = '#ff6b6b';
-                ctx.font = 'bold 24px Arial';
+                ctx.font = `bold ${Math.min(BLOCK_SIZE * 1.5, 20)}px Arial`;
                 ctx.textAlign = 'center';
-                ctx.fillText('ИГРА ОКОНЧЕНА', canvas.width / 2, canvas.height / 2 - 20);
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 20);
                 
                 ctx.fillStyle = '#40e0d0';
-                ctx.font = '18px Arial';
-                ctx.fillText(`ОЧКИ: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
-                
-                ctx.fillStyle = '#87ceeb';
-                ctx.font = '16px Arial';
-                ctx.fillText('Нажмите СТАРТ', canvas.width / 2, canvas.height / 2 + 60);
+                ctx.font = `${Math.min(BLOCK_SIZE * 1.2, 16)}px Arial`;
+                ctx.fillText(`Очки: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
             }
             
             // Пауза
@@ -729,13 +722,13 @@
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
                 ctx.fillStyle = '#40e0d0';
-                ctx.font = 'bold 24px Arial';
+                ctx.font = `bold ${Math.min(BLOCK_SIZE * 1.5, 20)}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.fillText('ПАУЗА', canvas.width / 2, canvas.height / 2);
             }
         }
         
-        function draw3DBlock(x, y, type) {
+        function drawBlock(x, y, type) {
             const posX = x * BLOCK_SIZE;
             const posY = y * BLOCK_SIZE;
             const size = BLOCK_SIZE;
@@ -743,7 +736,7 @@
             const color = COLORS[type];
             const darkColor = DARK_COLORS[type];
             
-            // Основной блок с градиентом
+            // Основной блок
             const gradient = ctx.createLinearGradient(
                 posX, posY,
                 posX + size, posY + size
@@ -754,45 +747,16 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(posX, posY, size, size);
             
-            // 3D эффект - верхняя грань
-            ctx.fillStyle = lightenColor(color, 20);
-            ctx.beginPath();
-            ctx.moveTo(posX, posY);
-            ctx.lineTo(posX + size, posY);
-            ctx.lineTo(posX + size - 3, posY + 3);
-            ctx.lineTo(posX + 3, posY + 3);
-            ctx.closePath();
-            ctx.fill();
-            
-            // Левая грань
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(posX, posY);
-            ctx.lineTo(posX, posY + size);
-            ctx.lineTo(posX + 3, posY + size - 3);
-            ctx.lineTo(posX + 3, posY + 3);
-            ctx.closePath();
-            ctx.fill();
-            
-            // Правая грань
-            ctx.fillStyle = darkColor;
-            ctx.beginPath();
-            ctx.moveTo(posX + size, posY);
-            ctx.lineTo(posX + size, posY + size);
-            ctx.lineTo(posX + size - 3, posY + size - 3);
-            ctx.lineTo(posX + size - 3, posY + 3);
-            ctx.closePath();
-            ctx.fill();
-            
-            // Нижняя грань
-            ctx.fillStyle = darkenColor(darkColor, 20);
-            ctx.beginPath();
-            ctx.moveTo(posX, posY + size);
-            ctx.lineTo(posX + size, posY + size);
-            ctx.lineTo(posX + size - 3, posY + size - 3);
-            ctx.lineTo(posX + 3, posY + size - 3);
-            ctx.closePath();
-            ctx.fill();
+            // Упрощенный 3D эффект для маленьких блоков
+            if (BLOCK_SIZE > 15) {
+                ctx.fillStyle = lightenColor(color, 15);
+                ctx.fillRect(posX, posY, size, 1);
+                ctx.fillRect(posX, posY, 1, size);
+                
+                ctx.fillStyle = darkenColor(darkColor, 15);
+                ctx.fillRect(posX + size - 1, posY, 1, size);
+                ctx.fillRect(posX, posY + size - 1, size, 1);
+            }
         }
         
         function checkCollisionAt(testX, testY) {
@@ -802,12 +766,8 @@
                         const boardX = testX + x;
                         const boardY = testY + y;
                         
-                        if (
-                            boardX < 0 ||
-                            boardX >= COLS ||
-                            boardY >= ROWS ||
-                            (boardY >= 0 && board[boardY][boardX] !== 0)
-                        ) {
+                        if (boardX < 0 || boardX >= COLS || boardY >= ROWS ||
+                            (boardY >= 0 && board[boardY][boardX] !== 0)) {
                             return true;
                         }
                     }
@@ -847,30 +807,24 @@
         }
         
         // ============ УПРАВЛЕНИЕ ИГРОЙ ============
-        function startGame() {
-            if (isGameOver) {
-                board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-                score = 0;
-                level = 1;
-                lines = 0;
-                gameSpeed = 1000;
-                isGameOver = false;
-                heldPiece = null;
-                canHold = true;
-                updateDisplay();
-            }
-            
+        function newGame() {
+            board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+            score = 0;
+            level = 1;
+            lines = 0;
+            gameSpeed = 1000;
+            isGameOver = false;
             isPaused = false;
-            document.getElementById('pauseBtn').innerHTML = '<span>⏸</span><span>ПАУЗА</span>';
+            heldPiece = null;
+            canHold = true;
+            
+            updateDisplay();
             
             if (gameInterval) {
                 clearInterval(gameInterval);
             }
             
-            if (!currentPiece) {
-                createNewPiece();
-            }
-            
+            createNewPiece();
             gameInterval = setInterval(gameLoop, gameSpeed);
             draw();
         }
@@ -879,9 +833,7 @@
             if (isGameOver) return;
             
             isPaused = !isPaused;
-            document.getElementById('pauseBtn').innerHTML = isPaused 
-                ? '<span>▶</span><span>ПРОДОЛЖИТЬ</span>'
-                : '<span>⏸</span><span>ПАУЗА</span>';
+            document.getElementById('pauseBtn').textContent = isPaused ? '▶' : '⏸';
             draw();
         }
         
@@ -900,18 +852,17 @@
         function updateDisplay() {
             document.getElementById('score').textContent = score;
             document.getElementById('level').textContent = level;
-            document.getElementById('lines').textContent = lines;
         }
         
-        // ============ НАЗНАЧЕНИЕ КНОПОК ДЖОЙСТИКА ============
+        // ============ НАЗНАЧЕНИЕ КНОПОК ============
         document.getElementById('btnLeft').addEventListener('click', () => move(-1));
         document.getElementById('btnRight').addEventListener('click', () => move(1));
-        document.getElementById('btnUp').addEventListener('click', rotate);
         document.getElementById('btnDown').addEventListener('click', softDrop);
+        document.getElementById('btnUp').addEventListener('click', rotate);
         document.getElementById('btnRotate').addEventListener('click', rotate);
         document.getElementById('btnHardDrop').addEventListener('click', hardDrop);
         document.getElementById('btnHold').addEventListener('click', holdPiece);
-        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('newGameBtn').addEventListener('click', newGame);
         document.getElementById('pauseBtn').addEventListener('click', togglePause);
         
         // Клавиатурное управление
@@ -949,11 +900,9 @@
                     e.preventDefault();
                     holdPiece();
                     break;
-                case 'Enter':
-                    if (isGameOver) {
-                        e.preventDefault();
-                        startGame();
-                    }
+                case 'r':
+                    e.preventDefault();
+                    newGame();
                     break;
             }
         });

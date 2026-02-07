@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Тетрис</title>
+    <title>Solar Tetris</title>
     <style>
+        /* ОСНОВНЫЕ НАСТРОЙКИ */
         * {
             margin: 0;
             padding: 0;
@@ -21,536 +22,49 @@
             overflow: hidden;
             position: fixed;
             background: #000;
-            font-family: Arial, sans-serif;
-            color: white;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
         }
         
         body {
             display: flex;
             flex-direction: column;
-            padding-top: 5px;
-            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            padding-top: env(safe-area-inset-top);
         }
         
-        /* ВЕРХНЯЯ ПАНЕЛЬ - КОМПАКТНАЯ */
-        .header {
+        /* ВЕРХНЯЯ ПАНЕЛЬ С КНОПКАМИ */
+        .top-panel {
             height: 50px;
-            background: #222;
+            background: #111;
+            border-bottom: 2px solid #0f0;
             display: flex;
             justify-content: space-around;
             align-items: center;
             padding: 0 10px;
-            margin-bottom: 5px;
+            flex-shrink: 0;
         }
         
-        .header-btn {
-            width: 80px;
-            height: 35px;
-            background: #444;
-            border: 2px solid #ff6600;
+        .top-btn {
+            width: 100px;
+            height: 40px;
+            background: #222;
+            border: 2px solid #0f0;
             border-radius: 8px;
-            color: white;
-            font-size: 13px;
+            color: #0f0;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-        }
-        
-        .header-btn:active {
-            background: #666;
-            transform: scale(0.95);
-        }
-        
-        /* ИГРОВОЕ ПОЛЕ - ПОДНЯТО ВЫШЕ */
-        .game-area {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 5px;
-            background: #111;
-            margin-bottom: 5px;
-        }
-        
-        canvas {
-            background: #000;
-            border: 2px solid #333;
-            border-radius: 5px;
-            display: block;
-        }
-        
-        /* ДЖОЙСТИК - НЕ ПЕРЕКРЫВАЕТ БРАУЗЕР */
-        .controls {
-            height: 130px;
-            background: #222;
-            padding: 10px;
-            border-top: 2px solid #00aaff;
-            margin-top: auto;
-        }
-        
-        .joystick-title {
-            text-align: center;
-            color: #00aaff;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-        
-        /* КОМПАКТНЫЙ ДЖОЙСТИК */
-        .joystick {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(2, 1fr);
             gap: 8px;
-            height: 90px;
+            transition: all 0.1s;
+            box-shadow: 0 3px 0 #0a0;
         }
         
-        .control-btn {
-            background: #333;
-            border: 2px solid #00aaff;
-            border-radius: 8px;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .top-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #0a0;
         }
         
-        .control-btn:active {
-            background: #555;
-            transform: scale(0.95);
-        }
-        
-        #rotate {
-            grid-column: 2;
-            grid-row: 1;
-            border-color: #ff9900;
-        }
-        
-        #up {
-            grid-column: 3;
-            grid-row: 1;
-        }
-        
-        #left {
-            grid-column: 2;
-            grid-row: 2;
-        }
-        
-        #down {
-            grid-column: 3;
-            grid-row: 2;
-        }
-        
-        #right {
-            grid-column: 4;
-            grid-row: 2;
-        }
-        
-        #drop {
-            grid-column: 5;
-            grid-row: 1;
-            border-color: #ff3300;
-        }
-        
-        #hold {
-            grid-column: 1;
-            grid-row: 1;
-            border-color: #00ff88;
-        }
-        
-        /* АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
-        @media (max-height: 700px) {
-            .header {
-                height: 45px;
-            }
-            
-            .header-btn {
-                width: 70px;
-                height: 32px;
-                font-size: 12px;
-            }
-            
-            .controls {
-                height: 110px;
-            }
-            
-            .joystick {
-                height: 75px;
-            }
-            
-            .control-btn {
-                font-size: 18px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
-    <div class="header">
-        <button class="header-btn" id="newBtn">
-            <span>🔄</span>
-            <span>НОВАЯ</span>
-        </button>
-        <button class="header-btn" id="startBtn">
-            <span>▶️</span>
-            <span>СТАРТ</span>
-        </button>
-        <button class="header-btn" id="pauseBtn">
-            <span>⏸️</span>
-            <span>ПАУЗА</span>
-        </button>
-    </div>
-
-    <!-- ИГРОВОЕ ПОЛЕ -->
-    <div class="game-area">
-        <canvas id="tetris" width="300" height="600"></canvas>
-    </div>
-
-    <!-- ДЖОЙСТИК -->
-    <div class="controls">
-        <div class="joystick-title">🎮 УПРАВЛЕНИЕ</div>
-        <div class="joystick">
-            <button class="control-btn" id="hold">💾</button>
-            <button class="control-btn" id="rotate">↻</button>
-            <button class="control-btn" id="up">↑</button>
-            <button class="control-btn" id="drop">💥</button>
-            <button class="control-btn" id="left">←</button>
-            <button class="control-btn" id="down">↓</button>
-            <button class="control-btn" id="right">→</button>
-        </div>
-    </div>
-
-    <script>
-        // ============ ИНИЦИАЛИЗАЦИЯ ============
-        const canvas = document.getElementById('tetris');
-        const ctx = canvas.getContext('2d');
-        
-        // БОЛЬШЕ СТРОК ДЛЯ МЕНЬШИХ ФИГУР
-        const COLS = 12;  // УВЕЛИЧИЛ с 10
-        const ROWS = 24;  // УВЕЛИЧИЛ с 20
-        const BLOCK_SIZE = 25; // УМЕНЬШИЛ с 30
-        
-        canvas.width = COLS * BLOCK_SIZE;
-        canvas.height = ROWS * BLOCK_SIZE;
-        
-        // ЦВЕТА
-        const COLORS = [
-            '#000000',
-            '#FF4444', // Красный
-            '#44FF44', // Зеленый
-            '#4444FF', // Синий
-            '#FFFF44', // Желтый
-            '#FF44FF', // Фиолетовый
-            '#44FFFF', // Голубой
-            '#FF8844'  // Оранжевый
-        ];
-        
-        // ФИГУРЫ
-        const SHAPES = [
-            null,
-            [[1,1,1,1]], // I
-            [[2,0,0],[2,2,2]], // J
-            [[0,0,3],[3,3,3]], // L
-            [[4,4],[4,4]], // O
-            [[0,5,5],[5,5,0]], // S
-            [[0,6,0],[6,6,6]], // T
-            [[7,7,0],[0,7,7]]  // Z
-        ];
-        
-        // ИГРОВЫЕ ПЕРЕМЕННЫЕ
-        let board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
-        let score = 0;
-        let level = 1;
-        let lines = 0;
-        let gameOver = false;
-        let paused = true;
-        let dropCounter = 0;
-        let dropInterval = 1000;
-        let lastTime = 0;
-        
-        let player = {
-            pos: {x: 0, y: 0},
-            matrix: null
-        };
-        
-        // ============ ФУНКЦИИ ============
-        function createPiece() {
-            const pieces = [1,2,3,4,5,6,7];
-            const type = pieces[Math.floor(Math.random() * pieces.length)];
-            
-            player.matrix = SHAPES[type].map(row => [...row]);
-            player.pos.y = 0;
-            player.pos.x = Math.floor(COLS / 2) - Math.floor(player.matrix[0].length / 2);
-            
-            if (collide()) {
-                gameOver = true;
-            }
-        }
-        
-        function collide() {
-            const [m, o] = [player.matrix, player.pos];
-            
-            for (let y = 0; y < m.length; y++) {
-                for (let x = 0; x < m[y].length; x++) {
-                    if (m[y][x] !== 0) {
-                        const boardY = y + o.y;
-                        const boardX = x + o.x;
-                        
-                        if (boardX < 0 || boardX >= COLS || boardY >= ROWS) {
-                            return true;
-                        }
-                        
-                        if (boardY >= 0 && board[boardY][boardX] !== 0) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        
-        function merge() {
-            player.matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        const boardY = y + player.pos.y;
-                        const boardX = x + player.pos.x;
-                        if (boardY >= 0) {
-                            board[boardY][boardX] = value;
-                        }
-                    }
-                });
-            });
-        }
-        
-        function playerDrop() {
-            if (paused || gameOver) return;
-            
-            player.pos.y++;
-            if (collide()) {
-                player.pos.y--;
-                merge();
-                createPiece();
-                sweep();
-            }
-            dropCounter = 0;
-        }
-        
-        function playerMove(dir) {
-            if (paused || gameOver) return;
-            
-            player.pos.x += dir;
-            if (collide()) {
-                player.pos.x -= dir;
-            }
-        }
-        
-        function playerRotate() {
-            if (paused || gameOver) return;
-            
-            const original = player.matrix.map(row => [...row]);
-            
-            const rotated = [];
-            for (let i = 0; i < original[0].length; i++) {
-                rotated[i] = [];
-                for (let j = 0; j < original.length; j++) {
-                    rotated[i][j] = original[original.length - 1 - j][i];
-                }
-            }
-            
-            player.matrix = rotated;
-            
-            if (collide()) {
-                player.matrix = original;
-            }
-        }
-        
-        function sweep() {
-            let rowCount = 0;
-            
-            outer: for (let y = ROWS - 1; y >= 0; y--) {
-                for (let x = 0; x < COLS; x++) {
-                    if (board[y][x] === 0) {
-                        continue outer;
-                    }
-                }
-                
-                const row = board.splice(y, 1)[0].fill(0);
-                board.unshift(row);
-                rowCount++;
-                y++;
-            }
-            
-            if (rowCount > 0) {
-                score += rowCount * 100 * level;
-                lines += rowCount;
-                level = Math.floor(lines / 10) + 1;
-                dropInterval = Math.max(300, 1000 - (level - 1) * 80);
-            }
-        }
-        
-        function draw() {
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Рисуем доску
-            board.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        ctx.fillStyle = COLORS[value];
-                        ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
-                    }
-                });
-            });
-            
-            // Рисуем текущую фигуру
-            if (player.matrix) {
-                player.matrix.forEach((row, y) => {
-                    row.forEach((value, x) => {
-                        if (value !== 0) {
-                            ctx.fillStyle = COLORS[value];
-                            ctx.fillRect(
-                                (x + player.pos.x) * BLOCK_SIZE,
-                                (y + player.pos.y) * BLOCK_SIZE,
-                                BLOCK_SIZE - 1,
-                                BLOCK_SIZE - 1
-                            );
-                        }
-                    });
-                });
-            }
-            
-            // Game Over
-            if (gameOver) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = 'red';
-                ctx.font = 'bold 20px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('ИГРА ОКОНЧЕНА', canvas.width / 2, canvas.height / 2 - 20);
-                
-                ctx.fillStyle = 'white';
-                ctx.font = '16px Arial';
-                ctx.fillText('Нажмите НОВАЯ', canvas.width / 2, canvas.height / 2 + 20);
-            }
-            
-            // Пауза
-            if (paused && !gameOver) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = 'yellow';
-                ctx.font = 'bold 20px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('ПАУЗА', canvas.width / 2, canvas.height / 2);
-            }
-        }
-        
-        function update(time = 0) {
-            const deltaTime = time - lastTime;
-            lastTime = time;
-            
-            if (!paused && !gameOver) {
-                dropCounter += deltaTime;
-                if (dropCounter > dropInterval) {
-                    playerDrop();
-                }
-            }
-            
-            draw();
-            requestAnimationFrame(update);
-        }
-        
-        // ============ УПРАВЛЕНИЕ ============
-        document.getElementById('left').addEventListener('click', () => {
-            if (!paused && !gameOver) playerMove(-1);
-            draw();
-        });
-        
-        document.getElementById('right').addEventListener('click', () => {
-            if (!paused && !gameOver) playerMove(1);
-            draw();
-        });
-        
-        document.getElementById('down').addEventListener('click', () => {
-            if (!paused && !gameOver) playerDrop();
-            draw();
-        });
-        
-        document.getElementById('up').addEventListener('click', () => {
-            if (!paused && !gameOver) playerRotate();
-            draw();
-        });
-        
-        document.getElementById('rotate').addEventListener('click', () => {
-            if (!paused && !gameOver) playerRotate();
-            draw();
-        });
-        
-        document.getElementById('drop').addEventListener('click', () => {
-            if (!paused && !gameOver) {
-                while (!collide()) {
-                    player.pos.y++;
-                }
-                player.pos.y--;
-                merge();
-                createPiece();
-                sweep();
-                draw();
-            }
-        });
-        
-        // УПРАВЛЕНИЕ ИГРОЙ
-        document.getElementById('newBtn').addEventListener('click', () => {
-            board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
-            score = 0;
-            level = 1;
-            lines = 0;
-            gameOver = false;
-            paused = false;
-            createPiece();
-            document.getElementById('pauseBtn').innerHTML = '<span>⏸️</span><span>ПАУЗА</span>';
-        });
-        
-        document.getElementById('startBtn').addEventListener('click', () => {
-            if (gameOver) {
-                board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
-                score = 0;
-                level = 1;
-                lines = 0;
-                gameOver = false;
-                paused = false;
-                createPiece();
-            } else if (paused) {
-                paused = false;
-                document.getElementById('pauseBtn').innerHTML = '<span>⏸️</span><span>ПАУЗА</span>';
-            } else {
-                paused = false;
-            }
-            
-            if (!player.matrix) {
-                createPiece();
-            }
-        });
-        
-        document.getElementById('pauseBtn').addEventListener('click', () => {
-            if (gameOver) return;
-            paused = !paused;
-            document.getElementById('pauseBtn').innerHTML = paused 
-                ? '<span>▶️</span><span>ПРОДОЛЖИТЬ</span>'
-                : '<span>⏸️</span><span>ПАУЗА</span>';
-            draw();
-        });
-        
-        // ============ ЗАПУСК ============
-        createPiece();
-        update();
-        draw();
-    </script>
-</body>
-</html>
+        /* ИГР

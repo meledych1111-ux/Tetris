@@ -28,20 +28,24 @@
         .game-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
             width: 100%;
             max-width: 500px;
-            padding: 10px;
+            height: 100vh;
+            max-height: 800px;
         }
         
-        .header {
+        /* ВЕРХНЯЯ ПАНЕЛЬ */
+        .top-panel {
+            background: rgba(20, 30, 80, 0.8);
+            border: 1px solid #3344aa;
+            border-radius: 8px 8px 0 0;
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid #3344aa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            flex-shrink: 0;
         }
         
         .game-title {
@@ -52,7 +56,7 @@
             letter-spacing: 1px;
         }
         
-        .controls-top {
+        .top-controls {
             display: flex;
             gap: 10px;
         }
@@ -70,6 +74,7 @@
             box-shadow: 0 4px 0 #112266, inset 0 1px 0 rgba(255, 255, 255, 0.2);
             text-transform: uppercase;
             letter-spacing: 1px;
+            min-width: 80px;
         }
         
         .game-btn:active {
@@ -93,34 +98,34 @@
             display: flex;
             gap: 15px;
             font-size: 16px;
-            margin-bottom: 15px;
-            width: 100%;
-            justify-content: center;
         }
         
         .stat-item {
-            background: rgba(20, 30, 80, 0.7);
+            background: rgba(10, 20, 60, 0.9);
             padding: 8px 15px;
             border-radius: 6px;
             border: 1px solid #3344aa;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
         }
         
-        .game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
+        /* ИГРОВОЕ ПОЛЕ */
+        .game-board-area {
+            flex: 1;
+            position: relative;
+            background: #0a0a2a;
+            border-left: 1px solid #3344aa;
+            border-right: 1px solid #3344aa;
+            overflow: hidden;
         }
         
         .game-board-container {
             position: relative;
-            border: 2px solid #3344aa;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(51, 68, 170, 0.5);
-            margin-bottom: 20px;
-            background: #0a0a2a;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Поднимаем поле выше */
+            padding-top: 10px; /* Отступ сверху */
         }
         
         #tetris-canvas {
@@ -173,140 +178,6 @@
             background-size: 30px 30px, 30px 30px, 30px 30px;
         }
         
-        /* ОБНОВЛЕННАЯ ПАНЕЛЬ УПРАВЛЕНИЯ ВНИЗУ */
-        .controls-bottom {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            margin-top: 10px;
-            padding: 15px;
-            background: rgba(20, 30, 80, 0.3);
-            border-radius: 12px;
-            border: 1px solid #3344aa;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
-        }
-        
-        .control-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 25px;
-            width: 100%;
-        }
-        
-        .control-btn {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #2a3f99, #1a2a77);
-            border: 2px solid #4455cc;
-            color: #e0e0ff;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 
-                0 6px 0 #112266,
-                inset 0 2px 0 rgba(255, 255, 255, 0.2),
-                0 0 15px rgba(68, 85, 204, 0.6);
-            transition: all 0.1s;
-            touch-action: manipulation;
-            position: relative;
-        }
-        
-        .control-btn:active {
-            transform: translateY(4px);
-            box-shadow: 
-                0 2px 0 #112266,
-                inset 0 2px 0 rgba(255, 255, 255, 0.1),
-                0 0 10px rgba(68, 85, 204, 0.5);
-        }
-        
-        .control-btn.down {
-            background: linear-gradient(145deg, #99442a, #77221a);
-            border-color: #cc5544;
-            box-shadow: 
-                0 6px 0 #662211,
-                inset 0 2px 0 rgba(255, 255, 255, 0.2),
-                0 0 15px rgba(204, 85, 68, 0.6);
-        }
-        
-        .control-btn.down:active {
-            box-shadow: 
-                0 2px 0 #662211,
-                inset 0 2px 0 rgba(255, 255, 255, 0.1),
-                0 0 10px rgba(204, 85, 68, 0.5);
-        }
-        
-        .control-btn.rotate {
-            background: linear-gradient(145deg, #2a9944, #1a772a);
-            border-color: #44cc55;
-            box-shadow: 
-                0 6px 0 #116622,
-                inset 0 2px 0 rgba(255, 255, 255, 0.2),
-                0 0 15px rgba(68, 204, 85, 0.6);
-        }
-        
-        .control-btn.rotate:active {
-            box-shadow: 
-                0 2px 0 #116622,
-                inset 0 2px 0 rgba(255, 255, 255, 0.1),
-                0 0 10px rgba(68, 204, 85, 0.5);
-        }
-        
-        /* Подписи для кнопок */
-        .control-label {
-            position: absolute;
-            bottom: -25px;
-            font-size: 14px;
-            color: #aaccff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-        
-        .rotate .control-label {
-            content: "Поворот";
-        }
-        
-        .left .control-label {
-            content: "Влево";
-        }
-        
-        .right .control-label {
-            content: "Вправо";
-        }
-        
-        .down .control-label {
-            content: "Вниз";
-        }
-        
-        .game-over {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 40, 0.9);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            display: none;
-        }
-        
-        .game-over h2 {
-            color: #ff6666;
-            font-size: 32px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(255, 102, 102, 0.7);
-        }
-        
         .level-gradient {
             position: absolute;
             top: 0;
@@ -322,76 +193,165 @@
             transition: background 1s ease;
         }
         
+        /* НИЖНЯЯ ПАНЕЛЬ УПРАВЛЕНИЯ */
+        .bottom-panel {
+            background: rgba(20, 30, 80, 0.8);
+            border: 1px solid #3344aa;
+            border-radius: 0 0 8px 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        
+        .control-btn {
+            background: linear-gradient(to bottom, #2a3f99, #1a2a77);
+            color: #e0e0ff;
+            border: 1px solid #4455cc;
+            border-radius: 6px;
+            padding: 12px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #112266, inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            min-width: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .control-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #112266, inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .control-btn.left {
+            background: linear-gradient(to bottom, #2a5f99, #1a3f77);
+        }
+        
+        .control-btn.right {
+            background: linear-gradient(to bottom, #2a5f99, #1a3f77);
+        }
+        
+        .control-btn.down {
+            background: linear-gradient(to bottom, #99442a, #77221a);
+            border-color: #cc5544;
+            box-shadow: 0 4px 0 #662211, inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .control-btn.rotate {
+            background: linear-gradient(to bottom, #2a9944, #1a772a);
+            border-color: #44cc55;
+            box-shadow: 0 4px 0 #116622, inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 40, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            display: none;
+        }
+        
+        .game-over h2 {
+            color: #ff6666;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 102, 102, 0.7);
+        }
+        
         @media (max-width: 500px) {
             .game-title {
                 font-size: 20px;
             }
             
-            .game-btn {
-                padding: 6px 12px;
-                font-size: 14px;
+            .game-btn, .control-btn {
+                padding: 8px 12px;
+                font-size: 16px;
+                min-width: 60px;
             }
             
             .control-btn {
-                width: 65px;
-                height: 65px;
-                font-size: 24px;
-            }
-            
-            .control-label {
-                font-size: 12px;
-                bottom: -22px;
-            }
-            
-            .control-row {
-                gap: 20px;
+                font-size: 18px;
+                padding: 10px 15px;
             }
             
             .stats {
                 gap: 10px;
+                font-size: 14px;
             }
             
             .stat-item {
                 padding: 6px 12px;
-                font-size: 14px;
+            }
+            
+            .bottom-panel {
+                gap: 10px;
+                padding: 12px;
+            }
+            
+            .top-panel {
+                padding: 10px;
             }
         }
         
         @media (max-width: 400px) {
+            .game-title {
+                font-size: 18px;
+            }
+            
+            .game-btn, .control-btn {
+                padding: 6px 10px;
+                font-size: 14px;
+                min-width: 55px;
+            }
+            
             .control-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 22px;
+                font-size: 16px;
+                padding: 8px 12px;
             }
             
-            .control-row {
-                gap: 15px;
+            .stats {
+                flex-direction: column;
+                gap: 5px;
             }
             
-            .controls-bottom {
-                padding: 12px;
-                gap: 12px;
+            .bottom-panel {
+                gap: 8px;
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <div class="header">
+        <!-- ВЕРХНЯЯ ПАНЕЛЬ: СТАРТ/ПАУЗА и статистика -->
+        <div class="top-panel">
             <div class="game-title">ТЕТРИС</div>
-            <div class="controls-top">
+            <div class="stats">
+                <div class="stat-item">Уровень: <span id="level">1</span></div>
+                <div class="stat-item">Очки: <span id="score">0</span></div>
+                <div class="stat-item">Линии: <span id="lines">0</span></div>
+            </div>
+            <div class="top-controls">
                 <button class="game-btn start" id="start-btn">СТАРТ</button>
                 <button class="game-btn pause" id="pause-btn">ПАУЗА</button>
             </div>
         </div>
         
-        <div class="stats">
-            <div class="stat-item">Уровень: <span id="level">1</span></div>
-            <div class="stat-item">Очки: <span id="score">0</span></div>
-            <div class="stat-item">Линии: <span id="lines">0</span></div>
-        </div>
-        
-        <div class="game-area">
+        <!-- ИГРОВОЕ ПОЛЕ (поднято выше) -->
+        <div class="game-board-area">
             <div class="game-board-container">
                 <div class="level-gradient" id="level-gradient"></div>
                 <div class="grid-overlay"></div>
@@ -402,33 +362,14 @@
                     <button class="game-btn start" id="restart-btn">ЗАНОВО</button>
                 </div>
             </div>
-            
-            <!-- ПАНЕЛЬ УПРАВЛЕНИЯ ВНИЗУ ЭКРАНА -->
-            <div class="controls-bottom">
-                <div class="control-row">
-                    <button class="control-btn rotate" id="rotate-btn">
-                        ↻
-                        <div class="control-label">Поворот</div>
-                    </button>
-                </div>
-                
-                <div class="control-row">
-                    <button class="control-btn left" id="left-btn">
-                        ←
-                        <div class="control-label">Влево</div>
-                    </button>
-                    
-                    <button class="control-btn down" id="down-btn">
-                        ↓
-                        <div class="control-label">Вниз</div>
-                    </button>
-                    
-                    <button class="control-btn right" id="right-btn">
-                        →
-                        <div class="control-label">Вправо</div>
-                    </button>
-                </div>
-            </div>
+        </div>
+        
+        <!-- НИЖНЯЯ ПАНЕЛЬ: Управление фигурами -->
+        <div class="bottom-panel">
+            <button class="control-btn left" id="left-btn">←</button>
+            <button class="control-btn down" id="down-btn">↓</button>
+            <button class="control-btn right" id="right-btn">→</button>
+            <button class="control-btn rotate" id="rotate-btn">↻</button>
         </div>
     </div>
 
@@ -470,7 +411,7 @@
         const linesEl = document.getElementById('lines');
         const levelGradient = document.getElementById('level-gradient');
         
-        // Элементы управления
+        // Кнопки управления
         const rotateBtn = document.getElementById('rotate-btn');
         const leftBtn = document.getElementById('left-btn');
         const rightBtn = document.getElementById('right-btn');
@@ -492,7 +433,6 @@
         let clearingRows = [];
         let clearAnimationProgress = 0;
         let fastDropActive = false;
-        let fastDropInterval = null;
         
         // Инициализация игрового поля
         function initBoard() {
@@ -897,43 +837,23 @@
             if (gameOver || isPaused || clearingRows.length > 0 || fastDropActive) return;
             
             fastDropActive = true;
-            fastDropInterval = setInterval(() => {
+            const fastDrop = () => {
                 if (gameOver || isPaused || clearingRows.length > 0) {
-                    stopFastDrop();
+                    fastDropActive = false;
                     return;
                 }
                 
                 if (!collide(currentPiece, currentX, currentY + 1)) {
                     currentY++;
                     drawBoard();
+                    requestAnimationFrame(fastDrop);
                 } else {
-                    stopFastDrop();
+                    fastDropActive = false;
                     mergePiece();
                     checkLines();
                 }
-            }, 50); // Очень быстрое падение
-        }
-        
-        // Остановка быстрого падения
-        function stopFastDrop() {
-            fastDropActive = false;
-            if (fastDropInterval) {
-                clearInterval(fastDropInterval);
-                fastDropInterval = null;
-            }
-        }
-        
-        // Мгновенное падение (хард дроп)
-        function hardDrop() {
-            if (gameOver || isPaused || clearingRows.length > 0) return;
-            
-            while (!collide(currentPiece, currentX, currentY + 1)) {
-                currentY++;
-            }
-            
-            mergePiece();
-            checkLines();
-            drawBoard();
+            };
+            fastDrop();
         }
         
         // Обновление статистики
@@ -982,11 +902,6 @@
                 cancelAnimationFrame(animationId);
             }
             
-            if (fastDropInterval) {
-                clearInterval(fastDropInterval);
-                fastDropInterval = null;
-            }
-            
             lastTime = 0;
             dropCounter = 0;
             animationId = requestAnimationFrame(gameLoop);
@@ -1024,19 +939,18 @@
                     rotatePiece();
                     break;
                 case ' ':
-                    hardDrop();
+                    // Мгновенное падение
+                    while (!collide(currentPiece, currentX, currentY + 1)) {
+                        currentY++;
+                    }
+                    mergePiece();
+                    checkLines();
+                    drawBoard();
                     break;
                 case 'p':
                 case 'P':
                     togglePause();
                     break;
-            }
-        }
-        
-        // Отпускание клавиш
-        function handleKeyUp(e) {
-            if (e.key === 'ArrowDown') {
-                stopFastDrop();
             }
         }
         
@@ -1052,30 +966,14 @@
             
             // Обработчики кнопок управления
             rotateBtn.addEventListener('click', rotatePiece);
-            
             leftBtn.addEventListener('click', moveLeft);
             rightBtn.addEventListener('click', moveRight);
             
-            // Быстрое падение при удержании кнопки "Вниз"
-            downBtn.addEventListener('mousedown', startFastDrop);
-            downBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                startFastDrop();
-            });
-            
-            downBtn.addEventListener('mouseup', stopFastDrop);
-            downBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                stopFastDrop();
-            });
-            downBtn.addEventListener('mouseleave', stopFastDrop);
-            
-            // Мгновенное падение при двойном клике
-            downBtn.addEventListener('dblclick', hardDrop);
+            // Быстрое падение при клике
+            downBtn.addEventListener('click', startFastDrop);
             
             // Обработка клавиатуры
             document.addEventListener('keydown', handleKeyDown);
-            document.addEventListener('keyup', handleKeyUp);
             
             // Запускаем игровой цикл
             animationId = requestAnimationFrame(gameLoop);
